@@ -14,6 +14,7 @@ import random
 class Spider(CrawlSpider):
     name = 'pornHubSpider'
     host = 'https://www.pornhub.com'
+    allowed_domains = ['www.pornhub.com']
     start_urls = list(set(PH_TYPES))
     logging.getLogger("requests").setLevel(logging.WARNING
                                           )  # 将requests的日志级别设成WARNING
@@ -42,7 +43,10 @@ class Spider(CrawlSpider):
             viewkey = re.findall('viewkey=(.*?)"', div.extract())
             # logging.debug(viewkey)
             yield Request(url='https://www.pornhub.com/embed/%s' % viewkey[0],
-                          callback=self.parse_ph_info)
+                          callback=self.parse_ph_info,
+                              meta={'Chrome': True},
+                              dont_filter=True)
+
         url_next = selector.xpath(
             '//a[@class="orangeButton" and text()="Next "]/@href').extract()
         logging.debug(url_next)
@@ -53,6 +57,8 @@ class Spider(CrawlSpider):
                           callback=self.parse_ph_key)
             # self.test = False
     def parse_ph_info(self, response):
+        vodeo_url = response.xpath('//*[@id="player"]/div[21]/video/source/@src').extract_first()
+
         phItem = PornVideoItem()
         selector = Selector(response)
         # logging.info(selector)

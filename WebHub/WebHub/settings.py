@@ -26,16 +26,22 @@ REDIRECT_ENABLED = False
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
+SPIDER_MIDDLEWARES = {
+}
+
 DOWNLOADER_MIDDLEWARES = {
+    "WebHub.middlewares.ProxyMiddleware":400,
     "WebHub.middlewares.UserAgentMiddleware": 401,
     "WebHub.middlewares.CookiesMiddleware": 402,
+    "WebHub.middlewares.ChromeMiddleware": 900,
+    # "WebHub.middlewares.PhantomJSMiddleware": 900,
 }
 # ITEM_PIPELINES = {
 #     "PornHub.pipelines.PornhubMongoDBPipeline": 403,
 # }
 
-FEED_URI=u'/Users/xiyouMc/Documents/pornhub.csv'
-FEED_FORMAT='CSV'
+# FEED_URI=u'/Users/xiyouMc/Documents/pornhub.csv'
+# FEED_FORMAT='CSV'
 
 DEPTH_PRIORITY = 1
 SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'

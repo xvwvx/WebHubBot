@@ -7,7 +7,7 @@
 
 import pymongo
 from pymongo import IndexModel, ASCENDING
-from items import PornVideoItem
+from WebHub.items import PornVideoItem
 
 
 class PornhubMongoDBPipeline(object):
@@ -21,10 +21,10 @@ class PornhubMongoDBPipeline(object):
         # https://stackoverflow.com/questions/35707496/remove-duplicate-in-mongodb/35711737
 
     def process_item(self, item, spider):
-        print 'MongoDBItem', item
+        print('MongoDBItem', item)
         """ 判断类型 存入MongoDB """
         if isinstance(item, PornVideoItem):
-            print 'PornVideoItem True'
+            print('PornVideoItem True')
             try:
                 self.PhRes.update_one({'link_url': item['link_url']}, {'$set': dict(item)}, upsert=True)
             except Exception:
