@@ -1,4 +1,5 @@
 # encoding=utf-8
+import base64
 import random
 import time
 
@@ -42,6 +43,12 @@ class ProxyMiddleware(object):
     def process_request(self, request, spider):
         request.meta['proxy'] = "http://127.0.0.1:1087"
 
+        # proxy_user_pass = "username:password"
+        # encoded_user_pass = base64.b64encode(proxy_user_pass.encode('utf-8'))
+        #
+        # # setup basic authentication for the proxy
+        # request.headers['Proxy-Authorization'] = 'Basic ' + str(encoded_user_pass, encoding="utf-8")
+
 class PhantomJSMiddleware(object):
     def process_request(self, request, spider):
         if request.url.startswith('https://www.pornhub.com/embed/'):
@@ -65,8 +72,8 @@ class ChromeMiddleware(object):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
-        options.add_argument('--proxy=proxy.com:8080')
-        # options.binary_locaion = '/Volumes/external/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+        # options.add_argument('--proxy=proxy.com:8080')
+        # options.binary_locaion = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
         self.driver = webdriver.Chrome(chrome_options=options)
         self.wait = WebDriverWait(self.driver, 15)
 
