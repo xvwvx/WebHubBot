@@ -58,7 +58,7 @@ class PhantomJSMiddleware(object):
             # driver.execute_script()
 
             body = driver.page_source
-            return HtmlResponse(driver.current_url, body=body, encoding='utf-8', request=request, status=200)
+            return HtmlResponse(driver.current_url, body=body, encoding='utf-8', request=request)
 
 
 from selenium.webdriver.chrome.options import Options
@@ -72,6 +72,7 @@ class ChromeMiddleware(object):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
+        # options.add_argument("user-agent=whatever you want")
         # options.add_argument('--proxy=proxy.com:8080')
         # options.binary_locaion = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
         self.driver = webdriver.Chrome(chrome_options=options)
@@ -82,12 +83,15 @@ class ChromeMiddleware(object):
 
     def process_request(self, request, spider):
         if 'Chrome' in request.meta:
-            driver = self.driver
-            driver.get(request.url)
+            self.driver.get(request.url)
+
+            # 必须先加载网站，才能设置cookie
+            for key, value in request.cookies.items():
+                self.driver.add_cookie({'name':key,'value':value})
+
             show = EC.presence_of_element_located((By.XPATH, '//*[@id="player"]/div[21]/video/source'))
             self.wait.until(show)
-            # driver.execute_script()
 
-            body = driver.page_source.encode('utf-8')
-            response = HtmlResponse(driver.current_url, body=body, encoding='utf-8', request=request)
+            body = self.driver.page_source.encode('utf-8')
+            response = HtmlResponse(self.driver.current_url, body=body, encoding='utf-8', request=request)
             return response
