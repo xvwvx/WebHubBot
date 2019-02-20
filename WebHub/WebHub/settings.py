@@ -36,9 +36,12 @@ DOWNLOADER_MIDDLEWARES = {
     "WebHub.middlewares.ChromeMiddleware": 900,
     # "WebHub.middlewares.PhantomJSMiddleware": 900,
 }
-# ITEM_PIPELINES = {
-#     "PornHub.pipelines.PornhubMongoDBPipeline": 403,
-# }
+ITEM_PIPELINES = {
+    "scrapy.pipelines.files.FilesPipeline": 1,
+    # "WebHub.pipelines.FilesPipeline": 5,
+    # "PornHub.pipelines.PornhubMongoDBPipeline": 403,
+}
+FILES_STORE = './tmp/'
 
 # FEED_URI=u'/Users/xiyouMc/Documents/pornhub.csv'
 # FEED_FORMAT='CSV'

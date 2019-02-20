@@ -30,3 +30,19 @@ class PornhubMongoDBPipeline(object):
             except Exception:
                 pass
         return item
+
+
+import scrapy.pipelines.files
+from urllib.parse import urlparse
+import os
+import WebHub.settings
+
+class FilesPipeline(scrapy.pipelines.files.FilesPipeline):
+    def file_path(self, request, response=None, info=None):
+        parse_result = urlparse(request.url)
+        path = parse_result.path
+        basename = os.path.basename(path)
+        dirname = WebHub.settings.FILES_STORE + os.path.dirname(path)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        return path

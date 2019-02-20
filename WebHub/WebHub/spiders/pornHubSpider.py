@@ -60,6 +60,8 @@ class Spider(CrawlSpider):
         vodeo_url = response.xpath('//*[@id="player"]/div[21]/video/source/@src').extract_first()
 
         phItem = PornVideoItem()
+        phItem['file_urls'] = [vodeo_url]
+
         selector = Selector(response)
         # logging.info(selector)
         _ph_info = re.findall('var flashvars =(.*?),\n', selector.extract())
